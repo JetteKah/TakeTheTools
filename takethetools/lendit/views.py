@@ -305,10 +305,16 @@ def exportBarcodes(request):
 def exportBarcodesPDF(request):
 
     form = ExportSelectionForm()
+    if not form.is_valid():
+        print("lul")
     export_sheet = Sheet()
+    tools = Tool.objects.all()
 
-    for field in form.get_interest_fields():
-        export_sheet.add_tool(int(field.name))
+    for i, toolname in enumerate(tools):
+        amount = request.POST.get(str(toolname))
+
+        if int(amount) > 0:
+            export_sheet.add_tool(toolname.barcode_ean13_no_check_bit, int(amount))
 
     export_sheet.list()
     export_sheet.export()

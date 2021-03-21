@@ -36,3 +36,14 @@ class UserTable(LenditTable):
     id = tables.Column()
     username = tables.Column()
     email = tables.Column()
+
+class BarcodeTable(LenditTable):
+
+    selection = tables.Column('pip')
+    class Meta:
+        model = Tool
+        fields = (
+            "name",
+            "brand",
+            "model"
+        )

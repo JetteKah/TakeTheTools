@@ -103,11 +103,12 @@ class ToolRegistrationForm(forms.ModelForm):
 
 
 class ExportSelectionForm(forms.Form):
-    def __init__(self):
-        super().__init__()
+
+    def __init__(self, *args, **kwargs):
         tools = Tool.objects.all()
-        for tool in tools:
-            self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
+        super(ExportSelectionForm, self).__init__(*args, **kwargs)
+        for i, toolname in enumerate(tools):
+            self.fields['%s' %toolname] = forms.IntegerField(label=toolname, min_value=0, initial=0, required=True)
 
     def get_interest_fields(self):
         for field_name in self.fields:
@@ -115,3 +116,12 @@ class ExportSelectionForm(forms.Form):
             yield self[field_name]
 
 
+class UserCreationForm(forms.Form):
+    username = forms.CharField(max_length=30)
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+    def __init__(self, *args, **kwargs):
+        extra = kwargs.pop('extra')
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        for i, question in enumerate(extra):
+            self.fields['custom_%s' % i] = forms.CharField(label=question)

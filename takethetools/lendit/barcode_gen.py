@@ -65,9 +65,9 @@ class Sheet:
 
         os.system("rm -r barcodes")
 
-    def add_tool(self, barcode):
+    def add_tool(self, barcode, amount):
         tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
-        for n in range(tool.available_amount):
+        for n in range(amount):
             self.barcodes.append([tool.barcode_ean13_no_check_bit, tool.name, tool.brand, tool.model, tool.owner.username])
 
     def list(self):
@@ -80,9 +80,3 @@ def fix_ids_to_EAN13():
     for tool in tools:
         if len(str(tool.id)) == 13:
             tool.delete()
-
-            #prev = tool.id
-            #tool.id = int(str(tool.id)[1:])
-            #print(str(tool), prev, "-->", tool.id)
-            #tool.save()
-            #print(tool.id)
